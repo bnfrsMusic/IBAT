@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <link rel="stylesheet" href="styleclient.css" />
+    <script src ="scriptclient.js"></script>
+</head>
+<body>
+
+    <div class="chat-container">
+    </div>
+
+    <div class="input-container">
+        <div id="resolutionDropdown" class="dropdown">
+            <button class="dropdown-button" onclick="document.getElementById('resolutionDropdown').classList.toggle('open')">
+                Resolution 
+                <svg viewBox="0 0 24 24" class="dropdown-arrow">
+                    <path d="M7 10l5 5 5-5z"/>
+                </svg>
+            </button>
+            <div class="dropdown-menu">
+                <div class="dropdown-item" onclick="selectOption(this)">720p</div>
+                <div class="dropdown-item" onclick="selectOption(this)">1080p</div>
+                <div class="dropdown-item" onclick="selectOption(this)">1440p</div>
+                <div class="dropdown-item" onclick="selectOption(this)">4K</div>
+            </div>
+        </div>
+
+        <button class="icon-button">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+            </svg>
+        </button>
+
+        <div class="message-input-wrapper">
+            <input type="text" class="message-input" placeholder="... Blah blah blah womp womp womp">
+            <button class="send-button">
+                <svg viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</body>
+</html>
