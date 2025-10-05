@@ -121,5 +121,5 @@ class RAGProcessor:
         r = self.query_search(keywords)
         return f"{prompt}\n" + r
 
-r = RAGProcessor()
-print(r.search("I want to know what plants grow the best in microgravity environment"))
+# r = RAGProcessor()
+# print(r.search("I want to know what plants grow the best in microgravity environment"))
