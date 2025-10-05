@@ -10,3 +10,5 @@ nltk
 rake_nltk
 SpeechRecognition
 pyttsx3
+Flask
+Flask-Cors

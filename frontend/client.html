@@ -14,18 +14,17 @@
     </div>
 
     <div class="input-container">
-        <div id="resolutionDropdown" class="dropdown">
-            <button class="dropdown-button" onclick="document.getElementById('resolutionDropdown').classList.toggle('open')">
-                Resolution 
+        <div class="dropdown" id="sizeDropdown">
+            <button class="dropdown-button" onclick="document.getElementById('sizeDropdown').classList.toggle('open')">
+                Model Size 
                 <svg viewBox="0 0 24 24" class="dropdown-arrow">
                     <path d="M7 10l5 5 5-5z"/>
                 </svg>
             </button>
             <div class="dropdown-menu">
-                <div class="dropdown-item" onclick="selectOption(this)">720p</div>
-                <div class="dropdown-item" onclick="selectOption(this)">1080p</div>
-                <div class="dropdown-item" onclick="selectOption(this)">1440p</div>
-                <div class="dropdown-item" onclick="selectOption(this)">4K</div>
+                <div class="dropdown-item" onclick="selectOption(this)">Light</div>
+                <div class="dropdown-item" onclick="selectOption(this)">Medium</div>
+                <div class="dropdown-item" onclick="selectOption(this)">Heavy</div>
             </div>
         </div>
 

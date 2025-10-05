@@ -44,43 +44,12 @@ class IBAT:
         self.ollama_client = OllamaClient()
         print("Ollama Client set up.")
 
-        # Initialize Whisper VAD and Speech 
-        self.recognizer = sr.Recognizer()
-        self.microphone = sr.Microphone()
-        self.voice = voice
-
-        self.vad = WhisperVoiceActivityDetector(
-            recognizer=self.recognizer, 
-            microphone=self.microphone,
-            whisper_model="tiny",
-            energy_threshold=energy_threshold,
-            pause_threshold=pause_threshold 
-        )
-        self.vad.calibrate()
-        
-        self.engine = pyttsx3.init()     
-    # def listen_for_speech(self) -> Optional[str]:
-    #     return self.vad.listen_for_speech_vad(timeout=self.speech_timeout)
+        self.weight = "light"
+        self.engine = pyttsx3.init()
     
-    def listen_for_speech(self) -> Optional[str]:
-        return self.vad.listen_for_speech_vad(timeout=10)
-
-    def run(self):
+    def run(self, user_prompt):
 
         print("Running main program...")
-
-        if self.voice:
-            print("Please speak your research question after the prompt.")
-            user_prompt = None
-            
-            while not user_prompt:
-                user_prompt = self.listen_for_speech()
-                if not user_prompt:
-                    print("No valid speech input detected. Please try again.")
-
-            print(f"Transcribed Question: {user_prompt}")
-        else:
-            user_prompt = input("Enter your research question: ")
 
         print("Connecting to Ollama model...")
 
@@ -91,7 +60,7 @@ class IBAT:
         elif self.weight == "medium":   #medium
             model_name = "llama3.2:3b"
         else:                           #heavy
-            model_name = ""
+            model_name = "deepseek-r1:8b"
 
         self.ollama_client.pull_model(model_name)
 
@@ -101,17 +70,9 @@ class IBAT:
 
         print("Sending prompt to Ollama...")
         
-
-
         response = self.ollama_client.send_prompt(model_name=model_name, prompt=prompt)
         
         print(response)
-        self.engine.say(response)
-        self.engine.runAndWait()
-
-if __name__ == "__main__":
-    ibat = IBAT(voice=True)
-    ibat.weight = "medium"  # Options: "light", "medium", "heavy"
-    ibat.run()
+        return response
 
 
