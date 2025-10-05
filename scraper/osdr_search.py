@@ -129,4 +129,20 @@ class NASAOSDRSearch:
         except json.JSONDecodeError as e:
             print(f"Error parsing JSON response: {e}")
             return []
-    
+
+
+def test():
+    searcher = NASAOSDRSearch()
+
+    results = searcher.search_studies(keyword="mouse", max_results=10)
+
+    for i, study in enumerate(results, 1):
+        print(f"{i}. {study['title']}")
+        print(f"   Accession: {study['accession']}")
+        print(f"   Description: {study['description']}")
+        print(f"   Organism: {study['organism']}")
+        print(f"   Project Type: {study['project_type']}")
+        print(f"   Assay Type: {study['assay_type']}")
+        print(f"   Managing Center: {study['managing_center']}")
+        print(f"   Release Date: {study['release_date']}")
+        print(f"   Relevance Score: {study['score']}\n")

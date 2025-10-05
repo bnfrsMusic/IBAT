@@ -1,6 +1,9 @@
 import requests
 import re
+import csv
+import difflib
 import xml.etree.ElementTree as ET
+from typing import List, Dict, Optional
 
 
 class NCBISearch:
@@ -32,7 +35,7 @@ class NCBISearch:
         result_key = next(iter(data["result"].keys() - {"uids"}))
         result = data["result"][result_key]
 
-        info = {
+        return {
             "title": result.get("title"),
             "authors": [a.get("name") for a in result.get("authors", [])],
             "journal": result.get("fulljournalname"),
@@ -43,7 +46,6 @@ class NCBISearch:
             ),
             "pmcid": f"PMC{pmcid_num}",
         }
-        return info
 
     def get_section(self, url: str, section="Abstract") -> str:
         """Fetch and return the best-matching section text from the paper."""
@@ -74,12 +76,11 @@ class NCBISearch:
             title_elem = sec.find("title")
             if title_elem is not None and title_elem.text:
                 title_text = title_elem.text.strip().lower()
-                if title_text == target:  # exact match
+                if title_text == target:
                     exact_match = sec
                     break
                 elif target in title_text and partial_match is None:
-                    partial_match = sec  # first partial match
-
+                    partial_match = sec
         best_match = exact_match or partial_match
         if not best_match:
             return f"No section found with heading matching or similar to '{section}'."
@@ -88,17 +89,63 @@ class NCBISearch:
         sec_text = "\n".join(p.text.strip() for p in paragraphs if p.text)
         return sec_text or f"No text found in section '{section}'."
 
+    def search(self, keywords: List[str], csv_path: str, max_results: int = 10) -> List[Dict]:
+        """fuzzy search titles in CSV"""
+        results = []
+        keywords = [k.lower() for k in keywords]
 
-    def search(self, keyword: str) -> str
+        with open(csv_path, newline='', encoding='utf-8-sig') as f:
+            reader = csv.DictReader(f)
+            # Normalize column names
+            field_map = {name.strip().lower(): name for name in reader.fieldnames or []}
+
+            if "title" not in field_map or "link" not in field_map:
+                raise KeyError(
+                    f"CSV must have 'Title' and 'Link' headers. Found: {reader.fieldnames}"
+                )
+
+            title_col = field_map["title"]
+            link_col = field_map["link"]
+
+            for row in reader:
+                title = row[title_col].strip()
+                link = row[link_col].strip()
+                title_lower = title.lower()
+
+                match_count = 0
+                for kw in keywords:
+                    if kw in title_lower:
+                        match_count += 1
+                    else:
+                        words = re.findall(r"\w+", title_lower)
+                        best_ratio = max(
+                            (difflib.SequenceMatcher(None, kw, w).ratio() for w in words),
+                            default=0,
+                        )
+                        if best_ratio > 0.75:
+                            match_count += 1
+
+                if match_count > 0:
+                    results.append({
+                        "title": title,
+                        "link": link,
+                        "match_score": match_count,
+                    })
+
+        results.sort(key=lambda x: (-x["match_score"], x["title"]))
+        return results[:max_results]
 
 
 
 def test():
     fetcher = NCBISearch()
-    url = "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4136787/"
+    results = fetcher.search(
+        ["mice", "gene"],
+        csv_path="data\csv\SB_publication_PMC.csv",  # path to your CSV
+        max_results=5
+    )
+    for r in results:
+        print(f"{r['title']} ({r['match_score']} matches)")
+        print(f"Link: {r['link']}\n")
 
-    info = fetcher.get_info(url)
-    results_text = fetcher.get_section(url, section = "Abstract")
 
-    print("Info:", info)
-    print("\Section:\n", results_text)
