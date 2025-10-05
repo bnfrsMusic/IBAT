@@ -1,0 +1,302 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #211729 0%, #1a0f24 100%);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.header {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tab {
+    padding: 12px 10px;
+    border-radius: 50px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    background: linear-gradient(145deg, #8e8bb6 0%, #8e8bb6 20%, #76739f 80%, #76739f 100%);
+    box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(240, 232, 240, 0.1);
+}
+
+.tab-button {
+    padding: 12px 40px;
+    border-radius: 25px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.tab-button.active {
+    background: linear-gradient(145deg, #e3c5cf 0%, #e3c5cf 20%, #c5a3af 80%, #c5a3af 100%);
+    color: #211729;
+    box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.25),
+    0 3px 10px rgba(0, 0, 0, 0.15),
+    inset 0 1px 3px rgba(227, 197, 207, 0.8),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.05);
+    text-shadow: 0 1px 1px rgba(227, 197, 207, 0.8);
+}
+
+.tab-button:not(.active) {
+    background-color: rgba(0,0,0,0);
+    color: #f0e8f0;
+}
+
+.chat-container {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    align-items: flex-start;
+    overflow-y: auto;
+}
+
+.message {
+    display: flex;
+    gap: 15px;
+    flex-direction: row-reverse;
+    align-items: flex-end;
+}
+
+.message.assistant {
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+    align-items: flex-end;
+}
+
+.message.user {
+    justify-content: flex-end;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #7a7a8f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.avatar svg {
+    width: 24px;
+    height: 24px;
+    fill: #f0e8f0;
+}
+
+.message-bubble {
+    max-width: 600px;
+    padding: 20px 25px;
+    border-radius: 20px;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.message.assistant .message-bubble {
+    background: linear-gradient(135deg, #e8e8f0 0%, #c7bdcc 100%);
+    color: #4d4654;
+    border-bottom-left-radius: 5px;
+}
+
+.message.user .message-bubble {
+    background: linear-gradient(145deg, #414776 0%, #414776 20%, #33385f 80%, #33385f  100%);
+    color: #f0e8f0;
+    border-bottom-left-radius: 5px;
+}
+
+.message-bubble a {
+    color: #8a5a5a;
+    text-decoration: underline;
+}
+
+.input-container {
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-button {
+    padding: 15px 25px;
+    border-radius: 25px;
+    background: linear-gradient(145deg, #e6dae6 0%, #e6dae6 20%, #d7c4d7 80%, #d7c4d7 100%);
+    color: #211729;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    display: flex;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.dropdown-button:hover {
+    background: linear-gradient(145deg, #dcc5dc 0%, #dcc5dc 20%, #c5a7c5 80%, #c5a7c5 100%);
+    color: #211729;
+}
+
+.dropdown-arrow {
+    width: 20px;
+    height: 20px;
+    fill: #211729;
+    transition: transform 0.3s ease;
+}
+
+.dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 10px;
+    background-color: #f0e8f0;
+    border-radius: 15px;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 150px;
+}
+
+.dropdown.open .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    padding: 12px 25px;
+    color: #211729;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid rgb(114, 104, 113);
+    background: linear-gradient(145deg, #e6dae6 0%, #e6dae6 20%, #d7c4d7 80%, #d7c4d7 100%);
+}
+
+.dropdown-item:hover {
+    background: linear-gradient(145deg, #dcc5dc 0%, #dcc5dc 20%, #c5a7c5 80%, #c5a7c5 100%);
+    color: #211729;
+}
+
+.icon-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #e6dae6 0%, #e6dae6 20%, #d7c4d7 80%, #d7c4d7 100%);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-button:hover {
+    background: linear-gradient(145deg, #dcc5dc 0%, #dcc5dc 20%, #c5a7c5 80%, #c5a7c5 100%);
+    color: #211729;
+}
+
+.icon-button svg {
+    width: 24px;
+    height: 24px;
+    fill: #211729;
+}
+
+.message-input-wrapper {
+    flex: 1;
+    background-color: #5f6791;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.message-input {
+    flex: 1;
+    padding: 15px;
+    background: transparent;
+    border: none;
+    color: #f0e8f0;
+    font-size: 15px;
+    outline: none;
+}
+
+.message-input::placeholder {
+    color: #b8b8c8;
+}
+
+.send-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #e6dae6 0%, #e6dae6 20%, #d7c4d7 80%, #d7c4d7 100%);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.25),
+    0 3px 10px rgba(0, 0, 0, 0.15),
+    inset 0 1px 3px rgba(240, 232, 240, 0.8),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.send-button svg {
+    width: 20px;
+    height: 20px;
+    fill: #211729;
+}
+
+.send-button:hover {
+    background: linear-gradient(145deg, #dcc5dc 0%, #dcc5dc 20%, #c5a7c5 80%, #c5a7c5 100%);
+    color: #211729;
+}
+
+.user-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 2px solid #f0e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: #f0e8f0;
+}
