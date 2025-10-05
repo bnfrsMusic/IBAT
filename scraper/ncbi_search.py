@@ -60,10 +60,14 @@ class NCBISearch:
 
         root = ET.fromstring(response.text)
         
+        # Helper function to get all text from an element including nested tags
+        def get_all_text(element):
+            return ''.join(element.itertext()).strip()
+        
         # ----------Direct match----------
         sec_return = root.findall(f".//{section.lower()}//p")
         if sec_return:
-            sec_text = "\n".join(p.text.strip() for p in sec_return if p.text)
+            sec_text = "\n".join(get_all_text(p) for p in sec_return if get_all_text(p))
             if sec_text:
                 return sec_text
 
@@ -86,9 +90,9 @@ class NCBISearch:
             return f"No section found with heading matching or similar to '{section}'."
 
         paragraphs = best_match.findall(".//p")
-        sec_text = "\n".join(p.text.strip() for p in paragraphs if p.text)
+        sec_text = "\n".join(get_all_text(p) for p in paragraphs if get_all_text(p))
         return sec_text or f"No text found in section '{section}'."
-
+    
     def search(self, keywords: List[str], csv_path: str, max_results: int = 10) -> List[Dict]:
         """fuzzy search titles in CSV"""
         results = []
