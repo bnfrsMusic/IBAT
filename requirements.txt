@@ -1,0 +1,12 @@
+numpy<2.0
+torch>=2.7.1
+torchvision>=0.22.1
+gensim
+unstructured==0.16.17
+requests
+scikit-learn
+openai-whisper
+nltk
+rake_nltk
+SpeechRecognition
+pyttsx3

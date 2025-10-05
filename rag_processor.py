@@ -68,7 +68,7 @@ class RAGProcessor:
         return None
 
     def _format(self, title, abstract, section_name, section_value) -> str:
-        return f"Possible Relevant Paper: {title}\n{section_name}: {section_value}\nContent: {abstract}\n\n"
+        return f"\nPossible Relevant Paper: {title}\n{section_name}: {section_value}\nContent: {abstract}\n"
 
     ##---------------------------Query Search---------------------------
     def query_search(self, keywords: List[str], category: Optional[str] = None):
@@ -92,18 +92,18 @@ class RAGProcessor:
         
         #----------------Print Queries----------------
     
-        # print("NCBI Queries:")
-        # for query in self.ncbi_queries:
-        #     print(f" - {query['title']} (Score: {query['match_score']})")
-        #     print(f"link: {query['link']}")
-        #     # print(self.ncbi.get_section(url =query['link'], section="Abstract"))
+        print("NCBI Queries:")
+        for query in self.ncbi_queries:
+            print(f" - {query['title']}")
+            print(f"link: {query['link']}")
+            # print(self.ncbi.get_section(url =query['link'], section="Abstract"))
 
-        # print("NASA OSDR Queries:")
-        # for query in self.osdr_queries:
-        #     print(f" - {query['title']} (Score: {query['score']})")
+        print("NASA OSDR Queries:")
+        for query in self.osdr_queries:
+            print(f" - {query['title']}")
 
         #----------------Format for RAG----------------
-        rag_output = ""
+        rag_output = "The following is in English. Use ONLY the relevant papers to answer the question (if applicable).\n"
         for query in self.ncbi_queries:
             abstract = self.ncbi.get_section(url=query['link'], section="Abstract")
             c = None

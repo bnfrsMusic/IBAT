@@ -1,4 +1,6 @@
 
+import json
+import subprocess
 import requests
 from typing import Optional, List
 
@@ -92,19 +94,17 @@ class OllamaClient:
         except Exception:
             return []
     
-    def pull_model(self, model_name: str) -> bool:
+    def pull_model(self, model: str) -> bool:
         """Pull model from Ollama"""
         try:
-            url = f"{self.ollama_url}/api/pull"
-            payload = {"name": model_name}
-            
-            print(f"Pulling model: {model_name}...")
-            response = self.session.post(url, json=payload, timeout=300)  # 5 minute timeout
-            response.raise_for_status()
-            
-            print(f"Model {model_name} pulled successfully")
-            return True
-            
-        except Exception as e:
-            print(f"Failed to pull model {model_name}: {e}")
-            return False
+            result = subprocess.run(["ollama", "list", "--json"], capture_output=True, text=True, check=True)
+            installed = [m["model"] for m in json.loads(result.stdout)]
+        except Exception:
+            installed = []
+
+        if model not in installed:
+            print(f"Pulling missing Ollama model: {model}")
+            try:
+                subprocess.check_call(["ollama", "pull", model])
+            except subprocess.CalledProcessError:
+                print(f"Failed to pull model: {model}")
