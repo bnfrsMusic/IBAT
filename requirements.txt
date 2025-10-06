@@ -12,3 +12,4 @@ SpeechRecognition
 pyttsx3
 Flask
 Flask-Cors
+PyExecJS

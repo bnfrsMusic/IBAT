@@ -110,10 +110,7 @@ function createAssistantMessage(text) {
     messageDiv.innerHTML = `
         <div class="message-content-container">
             <div class="message-bubble">
-                ${escapeHtml(text)}
-            </div>
-            <div class="message-actions">
-                <button class="action_button">Sources</button>
+                ${text}
             </div>
         </div>
     `;
@@ -177,6 +174,40 @@ document.addEventListener('DOMContentLoaded', function() {
     const sendButton = document.querySelector('.send-button');
     const chatContainer = document.querySelector('.chat-container');
     const sizeDropdown = document.getElementById('sizeDropdown');
+    const micButton = document.getElementById('mic-button');
+
+    let isListening = false;
+
+    if (!micButton) {
+        console.error('Mic button not found');
+        return;
+    }
+
+    micButton.addEventListener('click', async () => {
+        if (isListening) return;
+
+        isListening = true;
+        micButton.classList.add('recording'); // Use 'recording' for visual feedback
+        console.log("Requesting server to listen...");
+
+        try {
+            const response = await fetch('/api/listen', { method: 'POST' });
+            const data = await response.json();
+
+            if (data.text) {
+                messageInput.value = data.text;
+                sendMessage();
+            } else if (data.error) {
+                console.error('Listening error:', data.error);
+            }
+        } catch (error) {
+            console.error('Error during listening request:', error);
+        } finally {
+            isListening = false;
+            micButton.classList.remove('recording');
+            console.log("Listening request finished.");
+        }
+    });
     
     if (!messageInput || !sendButton || !chatContainer || !sizeDropdown) {
         console.error('Required elements not found');
@@ -242,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const botResponseText = chatData.response;
 
             // Update thinking message with actual response
-            thinkingMessage.querySelector('.message-bubble').innerHTML = escapeHtml(botResponseText);
+            thinkingMessage.querySelector('.message-bubble').innerHTML = botResponseText;
             chatHistory.addMessage('assistant', botResponseText);
 
             // Get TTS audio and play it

@@ -1,5 +1,6 @@
 
 body {
+    overflow-y: auto;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #211729 0%, #1a0f24 100%);
     display: flex;
